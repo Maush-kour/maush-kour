@@ -1,420 +1,73 @@
-<!doctype html> 
-<html lang="es">
-  <head> 
-    <meta charset="utf-8" /> 
-    <meta name="viewport" content="width=device-width,initial-scale=1" /> <title>MAUSH KOUR — Tu marca. Tu estilo. Tu momento.
-    </title> <link href="css/styles.css" rel="stylesheet">
-  </head> 
-  <body>
-    <header> 
-      <div class="brand">
-        <div class="logoBox">M</div> 
-        <div class="slogan">TU MARCA · TU ESTILO · TU MOMENTO</div>
-<header style="background-color: black; color: white; text-align: center; padding: 20px 0;">
-  <div class="brand">
-    <img src="LOGO_URL" alt="Logo Maush Kour" style="height: 90px; border-radius: 15px; margin-bottom: 10px;">
-    <h1 style="font-family: 'Poppins', sans-serif; letter-spacing: 3px; margin: 0;">MAUSH KOUR</h1>
-    <p style="font-style: italic; margin-top: 5px;">TU MARCA · TU ESTILO · TU MOMENTO</p>
-  </div>
-</header>
-  </div>
-  <nav>
-    <a href="#productos">Productos</a>
-    <a id="authBtnHeader" class="cta">Iniciar sesión</a>
-  </nav>
-</header>
-<main>
-  <section class="hero">
-    <div><h1 style="margin:0">Maush Kour — Accesorios y moda unisex</h1></div>
-  </section>
+# Generate a new ZIP with the updated Maush Kour template per user's final spec.
+from PIL import Image, ImageDraw, ImageFont
+import os, zipfile, io, random, textwrap
 
-  <section class="catalog" id="productos">
-    <aside class="categories">
-      <h4>Categorías</h4>
-      <button data-cat="all">Ver todo</button>
-      <button data-cat="relojes">Relojes</button>
-      <button data-cat="audifonos_inal">Audífonos inalámbricos</button>
-      <button data-cat="audifonos_cable">Audífonos con cable</button>
-      <button data-cat="zapatillas">Zapatillas</button>
-      <button data-cat="ropa">Pantalones / Polos</button>
-      <button data-cat="accesorios">Accesorios</button>
-      <div style="margin-top:12px;border-top:1px solid #eee;padding-top:12px">
-        <strong>Filtro por precio</strong>
-        <div class="small">S/ <input id="minPrice" value="30" style="width:60px"> - S/ <input id="maxPrice" value="300" style="width:60px"></div>
-        <button class="btn" onclick="applyPriceFilter()">Aplicar</button>
-      </div>
-    </aside>
+OUT_DIR = "/mnt/data/maushkour_final"
+os.makedirs(OUT_DIR, exist_ok=True)
+os.makedirs(os.path.join(OUT_DIR, "images"), exist_ok=True)
+os.makedirs(os.path.join(OUT_DIR, "css"), exist_ok=True)
+os.makedirs(os.path.join(OUT_DIR, "js"), exist_ok=True)
 
-    <div class="grid" id="grid">
+# Create 20 placeholder images (catalog-style)
+for i in range(1,21):
+    img = Image.new("RGB", (1200,800), color=(250,250,250))
+    d = ImageDraw.Draw(img)
+    try:
+        font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 60)
+        font_small = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 24)
+    except:
+        font = ImageFont.load_default()
+        font_small = ImageFont.load_default()
+    title = f"Producto {i:02d}"
+    w,h = d.textsize(title, font=font)
+    d.rectangle([50,50,1150,700], outline=(200,200,200), width=4)
+    d.text(((1200-w)/2,300), title, fill=(20,20,20), font=font)
+    subtitle = "Imagen genérica - Maush Kour"
+    sw,sh = d.textsize(subtitle, font=font_small)
+    d.text(((1200-sw)/2,500), subtitle, fill=(80,80,80), font=font_small)
+    img_path = os.path.join(OUT_DIR, "images", f"product{i:02d}.jpg")
+    img.save(img_path, quality=85)
 
-      <article class="card" data-id="p01" data-name="Producto 01" data-price="63" data-cat="relojes" data-colors="Negro,Blanco,Azul" data-has-size="no">
-        <img src="images/product01.jpg" alt="Producto 01">
-        <div class="body">
-          <div class="title">Producto 01</div>
-          <div class="desc">Descripción breve del producto — categoría relojes.</div>
-          <div class="meta">
-            <div class="price">S/ 63.00</div>
-            <div>
-              <button class="btn" onclick="addCart('p01')">Añadir</button>
-              <button class="btn btn-buy" onclick="openBuy('p01')">Comprar</button>
-            </div>
-          </div>
-        </div>
-      </article>
-    
-      <article class="card" data-id="p02" data-name="Producto 02" data-price="45" data-cat="relojes" data-colors="Negro,Blanco,Azul" data-has-size="no">
-        <img src="images/product02.jpg" alt="Producto 02">
-        <div class="body">
-          <div class="title">Producto 02</div>
-          <div class="desc">Descripción breve del producto — categoría relojes.</div>
-          <div class="meta">
-            <div class="price">S/ 45.00</div>
-            <div>
-              <button class="btn" onclick="addCart('p02')">Añadir</button>
-              <button class="btn btn-buy" onclick="openBuy('p02')">Comprar</button>
-            </div>
-          </div>
-        </div>
-      </article>
-    
-      <article class="card" data-id="p03" data-name="Producto 03" data-price="96" data-cat="ropa" data-colors="Rojo,Blanco,Negro" data-has-size="yes">
-        <img src="images/product03.jpg" alt="Producto 03">
-        <div class="body">
-          <div class="title">Producto 03</div>
-          <div class="desc">Descripción breve del producto — categoría ropa.</div>
-          <div class="meta">
-            <div class="price">S/ 96.00</div>
-            <div>
-              <button class="btn" onclick="addCart('p03')">Añadir</button>
-              <button class="btn btn-buy" onclick="openBuy('p03')">Comprar</button>
-            </div>
-          </div>
-        </div>
-      </article>
-    
-      <article class="card" data-id="p04" data-name="Producto 04" data-price="130" data-cat="accesorios" data-colors="Negro,Blanco,Azul" data-has-size="no">
-        <img src="images/product04.jpg" alt="Producto 04">
-        <div class="body">
-          <div class="title">Producto 04</div>
-          <div class="desc">Descripción breve del producto — categoría accesorios.</div>
-          <div class="meta">
-            <div class="price">S/ 130.00</div>
-            <div>
-              <button class="btn" onclick="addCart('p04')">Añadir</button>
-              <button class="btn btn-buy" onclick="openBuy('p04')">Comprar</button>
-            </div>
-          </div>
-        </div>
-      </article>
-    
-      <article class="card" data-id="p05" data-name="Producto 05" data-price="73" data-cat="audifonos_cable" data-colors="Negro,Blanco,Azul" data-has-size="no">
-        <img src="images/product05.jpg" alt="Producto 05">
-        <div class="body">
-          <div class="title">Producto 05</div>
-          <div class="desc">Descripción breve del producto — categoría audifonos_cable.</div>
-          <div class="meta">
-            <div class="price">S/ 73.00</div>
-            <div>
-              <button class="btn" onclick="addCart('p05')">Añadir</button>
-              <button class="btn btn-buy" onclick="openBuy('p05')">Comprar</button>
-            </div>
-          </div>
-        </div>
-      </article>
-    
-      <article class="card" data-id="p06" data-name="Producto 06" data-price="185" data-cat="audifonos_cable" data-colors="Negro,Blanco,Azul" data-has-size="no">
-        <img src="images/product06.jpg" alt="Producto 06">
-        <div class="body">
-          <div class="title">Producto 06</div>
-          <div class="desc">Descripción breve del producto — categoría audifonos_cable.</div>
-          <div class="meta">
-            <div class="price">S/ 185.00</div>
-            <div>
-              <button class="btn" onclick="addCart('p06')">Añadir</button>
-              <button class="btn btn-buy" onclick="openBuy('p06')">Comprar</button>
-            </div>
-          </div>
-        </div>
-      </article>
-    
-      <article class="card" data-id="p07" data-name="Producto 07" data-price="200" data-cat="ropa" data-colors="Rojo,Blanco,Negro" data-has-size="yes">
-        <img src="images/product07.jpg" alt="Producto 07">
-        <div class="body">
-          <div class="title">Producto 07</div>
-          <div class="desc">Descripción breve del producto — categoría ropa.</div>
-          <div class="meta">
-            <div class="price">S/ 200.00</div>
-            <div>
-              <button class="btn" onclick="addCart('p07')">Añadir</button>
-              <button class="btn btn-buy" onclick="openBuy('p07')">Comprar</button>
-            </div>
-          </div>
-        </div>
-      </article>
-    
-      <article class="card" data-id="p08" data-name="Producto 08" data-price="104" data-cat="relojes" data-colors="Negro,Blanco,Azul" data-has-size="no">
-        <img src="images/product08.jpg" alt="Producto 08">
-        <div class="body">
-          <div class="title">Producto 08</div>
-          <div class="desc">Descripción breve del producto — categoría relojes.</div>
-          <div class="meta">
-            <div class="price">S/ 104.00</div>
-            <div>
-              <button class="btn" onclick="addCart('p08')">Añadir</button>
-              <button class="btn btn-buy" onclick="openBuy('p08')">Comprar</button>
-            </div>
-          </div>
-        </div>
-      </article>
-    
-      <article class="card" data-id="p09" data-name="Producto 09" data-price="274" data-cat="ropa" data-colors="Rojo,Blanco,Negro" data-has-size="yes">
-        <img src="images/product09.jpg" alt="Producto 09">
-        <div class="body">
-          <div class="title">Producto 09</div>
-          <div class="desc">Descripción breve del producto — categoría ropa.</div>
-          <div class="meta">
-            <div class="price">S/ 274.00</div>
-            <div>
-              <button class="btn" onclick="addCart('p09')">Añadir</button>
-              <button class="btn btn-buy" onclick="openBuy('p09')">Comprar</button>
-            </div>
-          </div>
-        </div>
-      </article>
-    
-      <article class="card" data-id="p10" data-name="Producto 10" data-price="259" data-cat="audifonos_cable" data-colors="Negro,Blanco,Azul" data-has-size="no">
-        <img src="images/product10.jpg" alt="Producto 10">
-        <div class="body">
-          <div class="title">Producto 10</div>
-          <div class="desc">Descripción breve del producto — categoría audifonos_cable.</div>
-          <div class="meta">
-            <div class="price">S/ 259.00</div>
-            <div>
-              <button class="btn" onclick="addCart('p10')">Añadir</button>
-              <button class="btn btn-buy" onclick="openBuy('p10')">Comprar</button>
-            </div>
-          </div>
-        </div>
-      </article>
-    
-      <article class="card" data-id="p11" data-name="Producto 11" data-price="210" data-cat="ropa" data-colors="Rojo,Blanco,Negro" data-has-size="yes">
-        <img src="images/product11.jpg" alt="Producto 11">
-        <div class="body">
-          <div class="title">Producto 11</div>
-          <div class="desc">Descripción breve del producto — categoría ropa.</div>
-          <div class="meta">
-            <div class="price">S/ 210.00</div>
-            <div>
-              <button class="btn" onclick="addCart('p11')">Añadir</button>
-              <button class="btn btn-buy" onclick="openBuy('p11')">Comprar</button>
-            </div>
-          </div>
-        </div>
-      </article>
-    
-      <article class="card" data-id="p12" data-name="Producto 12" data-price="143" data-cat="relojes" data-colors="Negro,Blanco,Azul" data-has-size="no">
-        <img src="images/product12.jpg" alt="Producto 12">
-        <div class="body">
-          <div class="title">Producto 12</div>
-          <div class="desc">Descripción breve del producto — categoría relojes.</div>
-          <div class="meta">
-            <div class="price">S/ 143.00</div>
-            <div>
-              <button class="btn" onclick="addCart('p12')">Añadir</button>
-              <button class="btn btn-buy" onclick="openBuy('p12')">Comprar</button>
-            </div>
-          </div>
-        </div>
-      </article>
-    
-      <article class="card" data-id="p13" data-name="Producto 13" data-price="228" data-cat="ropa" data-colors="Rojo,Blanco,Negro" data-has-size="yes">
-        <img src="images/product13.jpg" alt="Producto 13">
-        <div class="body">
-          <div class="title">Producto 13</div>
-          <div class="desc">Descripción breve del producto — categoría ropa.</div>
-          <div class="meta">
-            <div class="price">S/ 228.00</div>
-            <div>
-              <button class="btn" onclick="addCart('p13')">Añadir</button>
-              <button class="btn btn-buy" onclick="openBuy('p13')">Comprar</button>
-            </div>
-          </div>
-        </div>
-      </article>
-    
-      <article class="card" data-id="p14" data-name="Producto 14" data-price="233" data-cat="zapatillas" data-colors="Negro,Blanco,Azul" data-has-size="yes">
-        <img src="images/product14.jpg" alt="Producto 14">
-        <div class="body">
-          <div class="title">Producto 14</div>
-          <div class="desc">Descripción breve del producto — categoría zapatillas.</div>
-          <div class="meta">
-            <div class="price">S/ 233.00</div>
-            <div>
-              <button class="btn" onclick="addCart('p14')">Añadir</button>
-              <button class="btn btn-buy" onclick="openBuy('p14')">Comprar</button>
-            </div>
-          </div>
-        </div>
-      </article>
-    
-      <article class="card" data-id="p15" data-name="Producto 15" data-price="236" data-cat="zapatillas" data-colors="Negro,Blanco,Azul" data-has-size="yes">
-        <img src="images/product15.jpg" alt="Producto 15">
-        <div class="body">
-          <div class="title">Producto 15</div>
-          <div class="desc">Descripción breve del producto — categoría zapatillas.</div>
-          <div class="meta">
-            <div class="price">S/ 236.00</div>
-            <div>
-              <button class="btn" onclick="addCart('p15')">Añadir</button>
-              <button class="btn btn-buy" onclick="openBuy('p15')">Comprar</button>
-            </div>
-          </div>
-        </div>
-      </article>
-    
-      <article class="card" data-id="p16" data-name="Producto 16" data-price="149" data-cat="accesorios" data-colors="Negro,Blanco,Azul" data-has-size="no">
-        <img src="images/product16.jpg" alt="Producto 16">
-        <div class="body">
-          <div class="title">Producto 16</div>
-          <div class="desc">Descripción breve del producto — categoría accesorios.</div>
-          <div class="meta">
-            <div class="price">S/ 149.00</div>
-            <div>
-              <button class="btn" onclick="addCart('p16')">Añadir</button>
-              <button class="btn btn-buy" onclick="openBuy('p16')">Comprar</button>
-            </div>
-          </div>
-        </div>
-      </article>
-    
-      <article class="card" data-id="p17" data-name="Producto 17" data-price="137" data-cat="relojes" data-colors="Negro,Blanco,Azul" data-has-size="no">
-        <img src="images/product17.jpg" alt="Producto 17">
-        <div class="body">
-          <div class="title">Producto 17</div>
-          <div class="desc">Descripción breve del producto — categoría relojes.</div>
-          <div class="meta">
-            <div class="price">S/ 137.00</div>
-            <div>
-              <button class="btn" onclick="addCart('p17')">Añadir</button>
-              <button class="btn btn-buy" onclick="openBuy('p17')">Comprar</button>
-            </div>
-          </div>
-        </div>
-      </article>
-    
-      <article class="card" data-id="p18" data-name="Producto 18" data-price="104" data-cat="audifonos_inal" data-colors="Negro,Blanco,Azul" data-has-size="no">
-        <img src="images/product18.jpg" alt="Producto 18">
-        <div class="body">
-          <div class="title">Producto 18</div>
-          <div class="desc">Descripción breve del producto — categoría audifonos_inal.</div>
-          <div class="meta">
-            <div class="price">S/ 104.00</div>
-            <div>
-              <button class="btn" onclick="addCart('p18')">Añadir</button>
-              <button class="btn btn-buy" onclick="openBuy('p18')">Comprar</button>
-            </div>
-          </div>
-        </div>
-      </article>
-    
-      <article class="card" data-id="p19" data-name="Producto 19" data-price="187" data-cat="audifonos_cable" data-colors="Negro,Blanco,Azul" data-has-size="no">
-        <img src="images/product19.jpg" alt="Producto 19">
-        <div class="body">
-          <div class="title">Producto 19</div>
-          <div class="desc">Descripción breve del producto — categoría audifonos_cable.</div>
-          <div class="meta">
-            <div class="price">S/ 187.00</div>
-            <div>
-              <button class="btn" onclick="addCart('p19')">Añadir</button>
-              <button class="btn btn-buy" onclick="openBuy('p19')">Comprar</button>
-            </div>
-          </div>
-        </div>
-      </article>
-    
-      <article class="card" data-id="p20" data-name="Producto 20" data-price="56" data-cat="ropa" data-colors="Rojo,Blanco,Negro" data-has-size="yes">
-        <img src="images/product20.jpg" alt="Producto 20">
-        <div class="body">
-          <div class="title">Producto 20</div>
-          <div class="desc">Descripción breve del producto — categoría ropa.</div>
-          <div class="meta">
-            <div class="price">S/ 56.00</div>
-            <div>
-              <button class="btn" onclick="addCart('p20')">Añadir</button>
-              <button class="btn btn-buy" onclick="openBuy('p20')">Comprar</button>
-            </div>
-          </div>
-        </div>
-      </article>
-    
-    </div> <!-- grid -->
-  </section>
+# Save user's logo copy as placeholder if not provided
+logo_path = os.path.join(OUT_DIR, "images", "logo.png")
+try:
+    # try to reuse uploaded logo from previous kernel path if exists
+    src = "/mnt/data/maushkour_site/images/product01.jpg"
+    Image.open(src).save(logo_path)
+except:
+    # generate simple logo placeholder
+    img = Image.new("RGB", (800,400), color=(20,20,20))
+    d = ImageDraw.Draw(img)
+    try:
+        font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 80)
+    except:
+        font = ImageFont.load_default()
+    text = "MAUSH KOUR"
+    w,h = d.textsize(text, font=font)
+    d.text(((800-w)/2,150), text, fill=(255,215,0), font=font)  # gold-ish
+    d.text(((800-w)/2,250), "Tu marca · Tu estilo · Tu momento", fill=(255,255,255), font=font_small)
+    img.save(logo_path, quality=90)
 
-  <section id="contacto" style="margin-top:20px">
-    <p class="small">Síguenos: Instagram • Facebook • WhatsApp (+51 924 899 004)</p>
-  </section>
-
-  <div class="footer">© MAUSH KOUR — Todos los derechos reservados.</div>
-</main>
-
-<div class="floating">
-  <button class="float-btn" id="openCart">🛒</button>
-  <button class="float-btn" id="authBtnFloating">👤</button>
-</div>
-
-<!-- Buy modal -->
-<div class="modal" id="buyModal"><div class="box" id="buyBody"></div></div>
-
-<!-- Cart modal -->
-<div class="modal" id="cartModal"><div class="box">
-  <div style="display:flex;justify-content:space-between;align-items:center"><strong>Carrito</strong><button onclick="closeCart()" style="border:0;background:transparent;">✕</button></div>
-  <div id="cartItems" style="margin-top:12px;min-height:80px"></div>
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
-    <div><strong>Total:</strong> <span id="cartTotal">S/. 0.00</span></div>
-    <div><button class="btn" onclick="clearCart()">Vaciar</button><button class="btn btn-buy" onclick="openCheckout()">Pagar</button></div>
-  </div>
-</div></div>
-
-<!-- Auth modal (two-step) -->
-<div class="modal" id="authModal"><div class="box">
-  <div style="display:flex;justify-content:space-between;align-items:center"><strong id="authTitle">Iniciar sesión</strong><button onclick="closeModal('authModal')" style="border:0;background:transparent;">✕</button></div>
-  <div id="regStep1" style="margin-top:12px">
-    <input id="regName" placeholder="Nombres">
-    <input id="regEmail" placeholder="Correo" style="margin-top:8px">
-    <div class="row" style="margin-top:8px"><input id="regPass" type="password" placeholder="Contraseña" class="col"><input id="regPass2" type="password" placeholder="Repetir contraseña" class="col"></div>
-    <div style="display:flex;gap:8px;margin-top:12px"><button class="btn btn-buy" onclick="doRegister()">Siguiente</button><button class="btn" onclick="closeModal('authModal')">Cancelar</button></div>
-    <div style="margin-top:10px;display:flex;gap:8px"><button class="btn" onclick="social('google')">Google (simulado)</button><button class="btn" onclick="social('facebook')">Facebook (simulado)</button></div>
-  </div>
-  <div id="regStep2" style="display:none;margin-top:12px">
-    <label>Fecha de nacimiento</label><input id="regBirth" type="date">
-    <label>Teléfono</label><input id="regPhone" placeholder="924...">
-    <div style="display:flex;gap:8px;margin-top:12px"><button class="btn btn-buy" onclick="finalizeRegistration()">Finalizar</button><button class="btn" onclick="showRegisterStep1()">Volver</button></div>
-  </div>
-  <div id="loginBox" style="display:none;margin-top:12px">
-    <input id="loginEmail" placeholder="Correo"><input id="loginPass" placeholder="Contraseña" type="password" style="margin-top:8px">
-    <div style="display:flex;gap:8px;margin-top:12px"><button class="btn btn-buy" onclick="doLogin()">Entrar</button><button class="btn" onclick="showRegisterStep1()">Crear cuenta</button></div>
-  </div>
-</div></div>
-
-<!-- Checkout modal -->
-<div class="modal" id="checkoutModal"><div class="box" id="checkoutBody">
-  <div><strong>Pagar con Yape</strong><button onclick="closeModal('checkoutModal')" style="border:0;background:transparent;float:right">✕</button></div>
-  <div id="checkoutUserNotice" class="small" style="margin-top:12px">Debes iniciar sesión para continuar.</div>
-  <div id="addressForm" style="display:none;margin-top:12px">
-    <label>Departamento</label><select id="selDept"></select>
-    <label>Ciudad</label><select id="selCity"></select>
-    <label>Distrito</label><select id="selDist"></select>
-    <label>Dirección (opciones)</label><select id="selAddressOption"><option value=''>--Selecciona--</option></select>
-    <label>Observaciones</label><input id="orderNote" placeholder="Referencia">
-    <div style="display:flex;gap:8px;margin-top:12px"><button class="btn btn-buy" onclick="confirmPayment()">Confirmar pago</button><button class="btn" onclick="closeModal('checkoutModal')">Cancelar</button></div>
-  </div>
-
-  <div id="checkoutSuccess" style="display:none;margin-top:12px">
-    <div class="success">✅ <span id="successText">¡Excelente compra! Gracias por elegir Maush Kour</span></div>
-    <div id="orderSummary" style="margin-top:10px"></div>
-  </div>
-</div></div>
-
-<script src="js/app.js"></script>
-</body>
-</html>
+# CSS (black/white/gold theme, responsive)
+css = """
+:root{
+  --bg:#000;
+  --card:#0b0b0b;
+  --muted:#bdbdbd;
+  --accent:#d4af37; /* gold */
+  --white:#fff;
+  --gap:16px;
+}
+*{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial}
+body{margin:0;background:var(--bg);color:var(--white);-webkit-font-smoothing:antialiased}
+.top-banner{background:#111;padding:8px;text-align:center;color:var(--accent);font-weight:700;font-size:14px}
+.header{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;border-bottom:1px solid #111}
+.logo-area{display:flex;align-items:center;gap:12px}
+.logo-area img{height:56px;width:auto;border-radius:8px}
+.search-area{flex:1;margin:0 24px;display:flex;align-items:center;gap:10px;max-width:700px}
+.search-area input{flex:1;padding:12px 14px;border-radius:10px;border:1px solid #222;background:#0a0a0a;color:var(--white)}
+.search-area button{padding:10px 14px;border-radius:10px;border:0;background:var(--accent);color:#000;font-weight:800;cursor:pointer}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.icon-btn{background:transparent;border:1px solid #222;padding:10px;border-radius:10px;color:var(--white);cursor:pointer}
+.hero{display:flex;align-items:center;justify-content:space-between;padding:40px 28px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));gap:20px}
+.hero .
